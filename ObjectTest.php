@@ -41,7 +41,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase {
 
     public function testPutObjectIntoNonexistedBucket() {
 		$this->expectException(ServiceResponseException::class);
-		$this->expectExceptionMessage("404 Not Found");
+		$this->expectExceptionMessage("The specified bucket does not exist");
             $this->cosClient->putObject(array(
                         'Bucket' => '000testbucket', 'Key' => 'hello.txt', 'Body' => 'Hello World'));
             $this->cosClient->deleteObject(array(
