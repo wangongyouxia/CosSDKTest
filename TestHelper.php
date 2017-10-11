@@ -20,6 +20,7 @@ class TestHelper {
                 }
             }
             $cosClient->deleteBucket(array('Bucket' => $bucket));
+            echo "Finish cleaned bucket!\n";
         } catch (\Exception $e) {
             //echo "$e\n";
             // Ignore
