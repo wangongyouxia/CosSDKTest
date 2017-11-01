@@ -27,13 +27,14 @@ class ObjectTest extends \PHPUnit_Framework_TestCase {
 
     public function testPutObject() {
         try {
-			$this->cosClient->DeleteBucket(array('Bucket' => $this->default_bucket_name));
+//			$this->cosClient->DeleteBucket(array('Bucket' => $this->default_bucket_name));
             $this->cosClient->CreateBucket(array('Bucket' => $this->default_bucket_name));
-            $this->cosClient->putObject(array(
+#		sleep(10);
+		$this->cosClient->putObject(array(
                         'Bucket' => $this->default_bucket_name, 'Key' => 'hello.txt', 'Body' => 'Hello World'));
             $this->cosClient->deleteObject(array(
                         'Bucket' => $this->default_bucket_name, 'Key' => 'hello.txt', 'Body' => 'Hello World'));
-			$this->cosClient->DeleteBucket(array('Bucket' => $this->default_bucket_name));
+//		$this->cosClient->DeleteBucket(array('Bucket' => $this->default_bucket_name));
         } catch (\Exception $e) {
             $this->assertFalse(true, $e);
         }
@@ -53,6 +54,8 @@ class ObjectTest extends \PHPUnit_Framework_TestCase {
         try {
             $result = $this->cosClient->CreateBucket(array('Bucket' => $this->default_bucket_name));
             var_dump($result);
+    
+	    sleep(10);
             $this->cosClient->putObject(array(
                         'Bucket' => $this->default_bucket_name, 'Key' => 'hello.txt', 'Body' => 'Hello World'));
             $this->cosClient->deleteObject(array(
