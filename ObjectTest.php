@@ -31,7 +31,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase {
 	try {
             $result = $this->cosClient->Copy($bucket = $this->default_bucket_name,
                         $key = 'dest',
-		        $copysource = 'zuhaotesteast-1251668577.cos.ap-shanghai.myqcloud.com/test.mp4');
+		        $copysource = 'zuhaotesteast-'.getenv('COS_APPID').'.cos.ap-shanghai.myqcloud.com/test.mp4');
             $this->cosClient->deleteObject(array(
                         'Bucket' => $this->default_bucket_name, 'Key' => 'dest'));
 		
@@ -46,7 +46,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase {
 	try {
             $result = $this->cosClient->Copy($bucket = $this->default_bucket_name,
                         $key = 'dest',
-		        $copysource = 'zuhaotesteast-1251668577.cos.ap-shanghai.myqcloud.com/5G');
+		        $copysource = 'zuhaotesteast-'.getenv('COS_APPID').'.cos.ap-shanghai.myqcloud.com/5G');
             $this->cosClient->deleteObject(array(
                         'Bucket' => $this->default_bucket_name, 'Key' => 'dest'));
 		
