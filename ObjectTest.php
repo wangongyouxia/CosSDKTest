@@ -134,7 +134,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase {
     public function testGetObjectUrl() {
         try{
             $this->cosClient->putObject(array(
-                        'Bucket' => $this->default_bucket_name, 'Key' => 'hello.txt', 'Body' => str_repeat('a', 20 * 1024 * 1024)));
+                        'Bucket' => $this->default_bucket_name, 'Key' => 'hello.txt', 'Body' => str_repeat('a', 20 * 1024)));
             $this->cosClient->deleteObject(array(
                         'Bucket' => $this->default_bucket_name, 'Key' => 'hello.txt', 'Body' => 'Hello World'));
             $this->cosClient->getObjectUrl($this->default_bucket_name, 'hello.txt', '+10 minutes');
