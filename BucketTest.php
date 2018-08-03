@@ -11,7 +11,7 @@ class BucketTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        TestHelper::nuke('testbucket');
+        TestHelper::nuke('zuhaotestphpbucket-'.getenv('COS_APPID'));
 
         $this->cosClient = new Client(array('region' => getenv('COS_REGION'),
             'credentials' => array(
@@ -22,14 +22,14 @@ class BucketTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        TestHelper::nuke('testbucket');
+        TestHelper::nuke('zuhaotestphpbucket-'.getenv('COS_APPID'));
         sleep(2);
     }
 
     public function testCreateBucket()
     {
         try {
-            $result = $this->cosClient->createBucket(array('Bucket' => 'testbucket'));
+            $result = $this->cosClient->createBucket(array('Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID')));
             sleep(2);
         } catch (\Exception $e) {
             $this->assertFalse(true, $e);
@@ -40,9 +40,9 @@ class BucketTest extends \PHPUnit_Framework_TestCase
     public function testDeleteBucket()
     {
         try {
-            $result = $this->cosClient->createBucket(array('Bucket' => 'testbucket'));
+            $result = $this->cosClient->createBucket(array('Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID')));
             sleep(2);
-            $result = $this->cosClient->deleteBucket(array('Bucket' => 'testbucket'));
+            $result = $this->cosClient->deleteBucket(array('Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID')));
         } catch (\Exception $e) {
             $this->assertFalse(true, $e);
         }
@@ -51,7 +51,7 @@ class BucketTest extends \PHPUnit_Framework_TestCase
     public function testDeleteNonexistedBucket()
     {
         try {
-            $result = $this->cosClient->deleteBucket(array('Bucket' => 'testbucket'));
+            $result = $this->cosClient->deleteBucket(array('Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID')));
             sleep(2);
         } catch (CosException $e) {
             $this->assertTrue($e->getExceptionCode() === 'NoSuchBucket');
@@ -62,11 +62,11 @@ class BucketTest extends \PHPUnit_Framework_TestCase
     public function testDeleteNonemptyBucket()
     {
         try {
-            $result = $this->cosClient->createBucket(array('Bucket' => 'testbucket'));
+            $result = $this->cosClient->createBucket(array('Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID')));
             sleep(2);
             $result = $this->cosClient->putObject(array(
-                'Bucket' => 'testbucket', 'Key' => 'hello.txt', 'Body' => 'Hello World!'));
-            $result = $this->cosClient->deleteBucket(array('Bucket' => 'testbucket'));
+                'Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID'), 'Key' => 'hello.txt', 'Body' => 'Hello World!'));
+            $result = $this->cosClient->deleteBucket(array('Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID')));
         } catch (CosException $e) {
             echo "$e\n";
             echo $e->getExceptionCode();
@@ -78,15 +78,15 @@ class BucketTest extends \PHPUnit_Framework_TestCase
     public function testPutBucketACL()
     {
         try {
-            $this->cosClient->createBucket(array('Bucket' => 'testbucket'));
+            $this->cosClient->createBucket(array('Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID')));
             sleep(5);
             $this->cosClient->PutBucketAcl(array(
-                'Bucket' => 'testbucket',
+                'Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID'),
                 'Grants' => array(
                     array(
                         'Grantee' => array(
-    'DisplayName' => 'qcs::cam::uin/327874225:uin/327874225',
-    'ID' => 'qcs::cam::uin/327874225:uin/327874225',
+    'DisplayName' => 'qcs::cam::uin/123456789:uin/123456789',
+    'ID' => 'qcs::cam::uin/123456789:uin/123456789',
     'Type' => 'CanonicalUser',
 ),
                         'Permission' => 'FULL_CONTROL',
@@ -94,8 +94,8 @@ class BucketTest extends \PHPUnit_Framework_TestCase
                     // ... repeated
                 ),
                 'Owner' => array(
-    'DisplayName' => 'qcs::cam::uin/3210232098:uin/3210232098',
-    'ID' => 'qcs::cam::uin/3210232098:uin/3210232098',
+    'DisplayName' => 'qcs::cam::uin/'.getenv('COS_UIN').':uin/'.getenv('COS_UIN').'',
+    'ID' => 'qcs::cam::uin/'.getenv('COS_UIN').':uin/'.getenv('COS_UIN').'',
 ),));
         } catch (\Exception $e) {
     $this->assertFalse(true, $e);
@@ -106,15 +106,15 @@ class BucketTest extends \PHPUnit_Framework_TestCase
     public function testGetBucketACL()
 {
     try {
-        $this->cosClient->createBucket(array('Bucket' => 'testbucket'));
+        $this->cosClient->createBucket(array('Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID')));
         sleep(5);
         $this->cosClient->PutBucketAcl(array(
-            'Bucket' => 'testbucket',
+            'Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID'),
             'Grants' => array(
                 array(
                     'Grantee' => array(
-                        'DisplayName' => 'qcs::cam::uin/327874225:uin/327874225',
-                        'ID' => 'qcs::cam::uin/327874225:uin/327874225',
+                        'DisplayName' => 'qcs::cam::uin/123456789:uin/123456789',
+                        'ID' => 'qcs::cam::uin/123456789:uin/123456789',
                         'Type' => 'CanonicalUser',
                     ),
                     'Permission' => 'FULL_CONTROL',
@@ -122,8 +122,8 @@ class BucketTest extends \PHPUnit_Framework_TestCase
                 // ... repeated
             ),
             'Owner' => array(
-                'DisplayName' => 'qcs::cam::uin/3210232098:uin/3210232098',
-                'ID' => 'qcs::cam::uin/3210232098:uin/3210232098',
+                'DisplayName' => 'qcs::cam::uin/'.getenv('COS_UIN').':uin/'.getenv('COS_UIN').'',
+                'ID' => 'qcs::cam::uin/'.getenv('COS_UIN').':uin/'.getenv('COS_UIN').'',
             ),));
 
     } catch (\Exception $e) {
@@ -134,11 +134,11 @@ class BucketTest extends \PHPUnit_Framework_TestCase
     public function testPutBucketLifecycle()
 {
     try {
-        $result = $this->cosClient->createBucket(array('Bucket' => 'testbucket'));
+        $result = $this->cosClient->createBucket(array('Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID')));
         sleep(2);
         $result = $this->cosClient->putBucketLifecycle(array(
             // Bucket is required
-            'Bucket' => 'testbucket-1252448703',
+            'Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID'),
             // Rules is required
             'Rules' => array(
                 array(
@@ -167,11 +167,11 @@ class BucketTest extends \PHPUnit_Framework_TestCase
     public function testGetBucketLifecycle()
 {
     try {
-        $result = $this->cosClient->createBucket(array('Bucket' => 'testbucket'));
+        $result = $this->cosClient->createBucket(array('Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID')));
         sleep(2);
         $result = $this->cosClient->putBucketLifecycle(array(
             // Bucket is required
-            'Bucket' => 'testbucket-1252448703',
+            'Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID'),
             // Rules is required
             'Rules' => array(
                 array(
@@ -195,7 +195,7 @@ class BucketTest extends \PHPUnit_Framework_TestCase
         sleep(5);
         $result = $this->cosClient->getBucketLifecycle(array(
             // Bucket is required
-            'Bucket' => 'testbucket',
+            'Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID'),
         ));
     } catch (\Exception $e) {
         $this->assertFalse(true, $e);
@@ -205,11 +205,11 @@ class BucketTest extends \PHPUnit_Framework_TestCase
     public function testDeleteBucketLifecycle()
 {
     try {
-        $result = $this->cosClient->createBucket(array('Bucket' => 'testbucket'));
+        $result = $this->cosClient->createBucket(array('Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID')));
         sleep(2);
         $result = $this->cosClient->putBucketLifecycle(array(
             // Bucket is required
-            'Bucket' => 'testbucket-1252448703',
+            'Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID'),
             // Rules is required
             'Rules' => array(
                 array(
@@ -233,7 +233,7 @@ class BucketTest extends \PHPUnit_Framework_TestCase
         sleep(5);
         $result = $this->cosClient->deleteBucketLifecycle(array(
             // Bucket is required
-            'Bucket' => 'testbucket',
+            'Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID'),
         ));
     } catch (\Exception $e) {
         $this->assertFalse(true, $e);
@@ -243,11 +243,11 @@ class BucketTest extends \PHPUnit_Framework_TestCase
     public function testPutBucketCors()
 {
     try {
-        $result = $this->cosClient->createBucket(array('Bucket' => 'testbucket'));
+        $result = $this->cosClient->createBucket(array('Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID')));
         sleep(2);
         $result = $this->cosClient->putBucketCors(array(
             // Bucket is required
-            'Bucket' => 'testbucket',
+            'Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID'),
             // CORSRules is required
             'CORSRules' => array(
                 array(
@@ -269,11 +269,11 @@ class BucketTest extends \PHPUnit_Framework_TestCase
 }
     public function testGetBucketCors() {
     try {
-        $result = $this->cosClient->createBucket(array('Bucket' => 'testbucket'));
+        $result = $this->cosClient->createBucket(array('Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID')));
         sleep(2);
         $result = $this->cosClient->putBucketCors(array(
             // Bucket is required
-            'Bucket' => 'testbucket',
+            'Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID'),
             // CORSRules is required
             'CORSRules' => array(
                 array(
@@ -290,18 +290,18 @@ class BucketTest extends \PHPUnit_Framework_TestCase
             ),
         ));
         $result = $this->cosClient->getBucketCors(array(
-            'Bucket' => 'testbucket',
+            'Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID'),
         ));
     } catch (\Exception $e) {
         $this->assertFalse(true, $e);
     }}
     public function testDeleteBucketCors() {
     try {
-        $result = $this->cosClient->createBucket(array('Bucket' => 'testbucket'));
+        $result = $this->cosClient->createBucket(array('Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID')));
         sleep(2);
         $result = $this->cosClient->putBucketCors(array(
             // Bucket is required
-            'Bucket' => 'testbucket',
+            'Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID'),
             // CORSRules is required
             'CORSRules' => array(
                 array(
@@ -318,7 +318,7 @@ class BucketTest extends \PHPUnit_Framework_TestCase
             ),
         ));
         $result = $this->cosClient->deleteBucketCors(array(
-            'Bucket' => 'testbucket',
+            'Bucket' => 'zuhaotestphpbucket-'.getenv('COS_APPID'),
         ));
     } catch (\Exception $e) {
         $this->assertFalse(true, $e);

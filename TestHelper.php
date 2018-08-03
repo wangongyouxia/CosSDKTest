@@ -18,7 +18,15 @@ class TestHelper {
                 foreach ($result ->get('Contents') as $content) {
                     $cosClient->deleteObject(array('Bucket' => $bucket, 'Key' => $content['Key']));
                 }
-            }
+	    }
+	    $result = $cosClient->ListMultipartUploads(
+            	array('Bucket' => $bucket,
+		'Prefix' => ''));
+	    if ($result->get('Uploads')){
+		foreach ($result->get('Uploads') as $uploads) {
+		    $cosClient->AbortMultipartUpload(array('Bucket'=>$bucket,'Key'=>$upload['Key'],'UploadId'=>$upload['UploadId']));
+		}
+	    }
             $cosClient->deleteBucket(array('Bucket' => $bucket));
             echo "Finish cleaned bucket!\n";
         } catch (\Exception $e) {
